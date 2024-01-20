@@ -34,6 +34,8 @@ VS Code Extension Interaction with CLI: We discussed how a VS Code extension mig
 - Help command should give them a quickstart. Add vault and variables and press send. This will generate an OTP that should be entered by receiving system. 
 - To export variables permanently, write to the user's shell startup script (bashrc, zshrc etc). Detect the shell using $SHELL command, then use the common startup scripts. If none of them are present, ask user whether it should be created for them.
 - In the future, allow people to host their own relay and rendezvous servers.
+- Add autocomplete to all commands
+- Autocomplete should be dynamic - don't show existing items in the dropdown list
 
 ## Happy path flow
 
