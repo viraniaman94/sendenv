@@ -19,12 +19,15 @@ def main():
     # Define the 'add' command
     add_parser = subparsers.add_parser('add', help='Add a variable to a vault')
     add_parser.add_argument('vault', help='The name of the vault')
-    add_parser.add_argument('variable', help='The name of the variable')
 
     # Define the 'delete-var' command
     delete_var_parser = subparsers.add_parser('delete-var', help='Delete a variable from a vault')
     delete_var_parser.add_argument('vault', help='The name of the vault')
     delete_var_parser.add_argument('variable', help='The name of the variable')
+
+    # Define the 'list-var' command
+    list_var_parser = subparsers.add_parser('list-var', help='List all variables in a vault')
+    list_var_parser.add_argument('vault', help='The name of the vault')
 
     # Parse the command-line arguments
     args = parser.parse_args()
@@ -37,9 +40,11 @@ def main():
     elif args.command == 'list':
         cli.list_vaults()
     elif args.command == 'add':
-        cli.add_variable(args.vault, args.variable)
+        cli.add_variable(args.vault)
     elif args.command == 'delete-var':
         cli.delete_variable(args.vault, args.variable)
+    elif args.command == 'list-var':
+        cli.list_variables(args.vault)
     else:
         parser.print_help()
 

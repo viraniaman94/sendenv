@@ -20,6 +20,7 @@ VS Code Extension Interaction with CLI: We discussed how a VS Code extension mig
 
 ## Notes
 
+- Minimize the cognitive load. 
 - Tool should not store variable values in the vault, only keys. This is because I am only a transfer tool and not a storage tool. 
 - Vault name validations - legal string keys for json? alphanuneric maybe? to avoid compatibility issues
 - Allow users to bulk input a comma separated, space separated or new-line separated list of names of environment variables to a vault
@@ -32,6 +33,7 @@ VS Code Extension Interaction with CLI: We discussed how a VS Code extension mig
 - Running magicenv without any option should show them the help command. 
 - Help command should give them a quickstart. Add vault and variables and press send. This will generate an OTP that should be entered by receiving system. 
 - To export variables permanently, write to the user's shell startup script (bashrc, zshrc etc). Detect the shell using $SHELL command, then use the common startup scripts. If none of them are present, ask user whether it should be created for them.
+- In the future, allow people to host their own relay and rendezvous servers.
 
 ## Happy path flow
 
@@ -47,7 +49,6 @@ VS Code Extension Interaction with CLI: We discussed how a VS Code extension mig
 - vault name validation
 - sender's vault variables are not present in the system anymore
 - receiver already has existing vault variables
-- receiver
 
 ## Interface
 
@@ -104,6 +105,13 @@ The functions in cli.py interact with the user and call methods on the Vault and
 The Vault and VaultManager classes use the utility functions in utils.py as needed.
 The Vault and VaultManager classes read from and write to the vaults directory specified in config.py.
 This structure separates concerns and makes your code easier to understand and maintain. It also makes it easier to test your code, as you can test each file independently.
+
+## Points to cover in Readme.md
+
+- Intro
+- Quickstart
+- Security
+- Roadmap
 
 ## Build, publish and maintain
 

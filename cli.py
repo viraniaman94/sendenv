@@ -6,11 +6,14 @@ def delete_vault(name):
     # TODO: Implement the logic to delete a vault
     pass
 
+def list_variables(vault):
+    pass
+
 def list_vaults():
     # TODO: Implement the logic to list all vaults
     pass
 
-def add_variable(vault, variable):
+def add_variable(vault):
     # TODO: Implement the logic to add a variable to a vault
     pass
 
