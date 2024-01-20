@@ -83,6 +83,28 @@ Help: magicenv --help
 
 This command displays help information about how to use the tool.
 
+## Suggested file structure
+
+main.py: This is the entry point of your application. It should parse the command-line arguments and call the appropriate function based on the command entered by the user.
+
+vault.py: This file should contain a Vault class that represents a vault. The class should have methods for each of the operations that can be performed on a vault, such as adding variables, deleting variables, and sending the vault to another user.
+
+vault_manager.py: This file should contain a VaultManager class that manages all of the vaults. It should have methods for creating a new vault, deleting a vault, listing all vaults, and finding a vault by name.
+
+cli.py: This file should contain functions for interacting with the user, such as prompting the user for input and displaying messages.
+
+utils.py: This file should contain utility functions that are used in multiple places in your code, such as a function for validating environment variable names.
+
+config.py: This file should contain configuration settings for your application, such as the path to the directory where the vaults are stored.
+
+Here's how these files might interact:
+
+When the user runs your application, main.py is executed. It parses the command-line arguments and calls a function in cli.py based on the command entered by the user.
+The functions in cli.py interact with the user and call methods on the Vault and VaultManager classes to perform the requested operations.
+The Vault and VaultManager classes use the utility functions in utils.py as needed.
+The Vault and VaultManager classes read from and write to the vaults directory specified in config.py.
+This structure separates concerns and makes your code easier to understand and maintain. It also makes it easier to test your code, as you can test each file independently.
+
 ## Build, publish and maintain
 
 Write the Code: Develop your Python CLI tool. Include a shebang (#!/usr/bin/env python3) at the top of your script.
