@@ -21,10 +21,67 @@ VS Code Extension Interaction with CLI: We discussed how a VS Code extension mig
 ## Notes
 
 - Tool should not store variable values in the vault, only keys. This is because I am only a transfer tool and not a storage tool. 
+- Vault name validations - legal string keys for json? alphanuneric maybe? to avoid compatibility issues
+- Allow users to bulk input a comma separated, space separated or new-line separated list of names of environment variables to a vault
 - Tool should store variable names in a file inside a dot folder. Folder can live at $HOME level
 - When sender sends a vault, tool should check whether env variable exists. If it doesn't exist, then ask user how to proceed. 
-- When receiver receives a variable that already exists in their system, ask them how to proceed. Give them options like keep/overwrite/keep all/overwrite all. 
+- When receiver receives a variable that already exists in their system, ask them how to proceed. Give them options like keep/overwrite/keep all/overwrite all. Give them option to view both the values before choosing. 
 - Session variables are not in scope. Only system wide environment variables. But there's no good way to distinguish right now, so will keep it out of scope of MVP.
+- Test between 2 macs, mac to ubuntu (and vice versa), ubuntu to ubuntu
+- Guide the user through happy path using output from each command. 
+- Running magicenv without any option should show them the help command. 
+- Help command should give them a quickstart. Add vault and variables and press send. This will generate an OTP that should be entered by receiving system. 
+- To export variables permanently, write to the user's shell startup script (bashrc, zshrc etc). Detect the shell using $SHELL command, then use the common startup scripts. If none of them are present, ask user whether it should be created for them.
+
+## Happy path flow
+
+- User installs the tool using pip or brew
+- They run the help function. This shows them that they should likely start with creating a new vault, then send the vault. Also ask receiver to install magicenv as well. 
+- They run magicenv create vault1. This should prompt them to input environment variables (y/n question if they want to add now)
+- They add env variables individually. After they press done, suggest in the output that they can run magicenv send vault1
+- When they write the send command, validate that env variables that are being sent exist in the system, and then the code appears, similar to how it works for magic-wormhole
+- Receiver receives the variable, tool checks if the variable is already present in the system, and because it doesnt exist, the variables are written into the system. 
+
+## Potential pitfalls in the flow
+
+- vault name validation
+- sender's vault variables are not present in the system anymore
+- receiver already has existing vault variables
+- receiver
+
+## Interface
+
+Create a new vault: magicenv create <vault_name>
+
+This command creates a new vault with the given name.
+
+Add environment variables to a vault: magicenv add <vault_name> <var1> <var2> ...
+
+This command adds the specified environment variables to the vault. If a specified variable does not exist, the tool should prompt the user for how to proceed.
+
+List all vaults: magicenv list
+
+This command lists all existing vaults.
+
+View a vault: magicenv view <vault_name>
+
+This command displays the environment variables in the specified vault.
+
+Send a vault to another user: magicenv send <vault_name>
+
+This command sends the specified vault to another user via Magic Wormhole. The tool should generate a code for the recipient to enter.
+
+Receive a vault from another user: magicenv receive <code>
+
+This command receives a vault from another user. The user must enter the code provided by the sender. If a received variable already exists in the user's environment, the tool should prompt the user for how to proceed.
+
+Delete a vault: magicenv delete <vault_name>
+
+This command deletes the specified vault.
+
+Help: magicenv --help
+
+This command displays help information about how to use the tool.
 
 ## Build, publish and maintain
 
