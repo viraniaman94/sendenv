@@ -1,0 +1,33 @@
+# Ignore pycache directory
+__pycache__/
+
+# Ignore compiled Python files
+*.pyc
+
+# Ignore environment-specific files
+.env
+.env.local
+.env.*
+
+# Ignore log files
+*.log
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore virtual environment
+venv/
+
+# Ignore pipenv files
+Pipfile
+Pipfile.lock
+
+# Ignore package distribution files
+dist/
+build/
+*.egg-info/
