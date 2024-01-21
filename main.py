@@ -20,12 +20,12 @@ def main():
     list_parser = subparsers.add_parser('list-vaults', help='List all vaults')
 
     # Define the 'add' command
-    add_parser = subparsers.add_parser('add-var', help='Add a variable to a vault')
+    add_parser = subparsers.add_parser('add-var', help='Add a variable to a vault. If no variable is provided, the user will be prompted to select one.')
     add_parser.add_argument('vault', help='The name of the vault')
     add_parser.add_argument('variable', nargs='?', default=None, help='The name of the variable')
 
     # Define the 'delete-var' command
-    delete_var_parser = subparsers.add_parser('delete-var', help='Delete a variable from a vault')
+    delete_var_parser = subparsers.add_parser('delete-var', help='Delete a variable from a vault. If no variable is provided, the user will be prompted to select one.')
     delete_var_parser.add_argument('vault', help='The name of the vault')
     delete_var_parser.add_argument('variable', nargs='?', default=None, help='The name of the variable')
 
