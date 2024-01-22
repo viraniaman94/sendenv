@@ -8,6 +8,8 @@ When you will choose to send a collection of variables to someone, you will be g
 
 ## How do I use this?
 
+Packaging and distribution is still broken. Working on it. Speculative docs below:
+
 Install `sendenv` for both the sender and receiver. 
 
 ```bash
