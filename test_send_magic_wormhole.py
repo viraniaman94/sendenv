@@ -7,7 +7,7 @@ from wormhole.cli.public_relay import MAILBOX_RELAY
 def send_vault():
     # Create a wormhole
     w = yield create("magicenv.dev", MAILBOX_RELAY, reactor)
-    w.allocate_code()
+    yield w.allocate_code()
 
     code = yield w.get_code()
     print(f"code: {code}")
@@ -24,6 +24,7 @@ def send_vault():
     print(f"Acknowledgement received: {ack}")
 
     yield w.close()
+    reactor.stop()
 
 reactor.callWhenRunning(send_vault)
 reactor.run()

@@ -23,6 +23,7 @@ def receive_vault():
 
     # Close the wormhole
     yield w.close()
+    reactor.stop()
 
 # Run the function
 reactor.callWhenRunning(receive_vault)
