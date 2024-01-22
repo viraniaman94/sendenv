@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='sendenv',
-    version='0.1.0',
+    version='0.1.1',
     description='A tool for developers to share environment variables with their team over the internet.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='Aman Virani',
     author_email='viraniaman94@gmail.com',
-    url='https://github.com/viraniaman94/magic-env',
+    url='https://github.com/viraniaman94/sendenv',
     packages=find_packages(),
     classifiers=[
         'Development Status :: 3 - Alpha',
