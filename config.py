@@ -8,3 +8,5 @@ VAULTS_CONFIG = os.path.join(VAULTS_DIR, "config.json")
 
 # Define the path to the vault storage file
 VAULTS_STORAGE = os.path.join(VAULTS_DIR, "storage.json")
+
+WORMHOLE_APP_ID = "magicenv.dev"

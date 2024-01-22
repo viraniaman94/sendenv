@@ -1,1 +1,2 @@
 prompt_toolkit==3.0.43
+magic-wormhole==0.13.0
