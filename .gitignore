@@ -31,3 +31,5 @@ Pipfile.lock
 dist/
 build/
 *.egg-info/
+
+Thoughts.md
