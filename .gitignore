@@ -32,4 +32,4 @@ dist/
 build/
 *.egg-info/
 
-Thoughts.md
+thoughts/
