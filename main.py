@@ -56,9 +56,9 @@ def main():
         cli.delete_variable(args.vault, args.variable)
     elif args.command == 'list-var':
         cli.list_variables(args.vault)
-    elif args.command == 'send':
+    elif args.command == 'send-vault':
         cli.send_vault(args.vault)
-    elif args.command == 'receive':
+    elif args.command == 'receive-vault':
         cli.receive_vault()
     else:
         parser.print_help()

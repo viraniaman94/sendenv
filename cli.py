@@ -2,6 +2,11 @@ from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 import os
 from vault_manager import VaultManager
+from twisted.internet import reactor, defer
+from wormhole import create
+from wormhole.cli.public_relay import MAILBOX_RELAY
+import json
+
 
 VAULT_MANAGER = VaultManager()
 
@@ -101,3 +106,67 @@ def delete_variable(vault_name, variable_name=None):
         print(f"Deleted selected variables from vault '{vault_name}'. The vault now contains:")
         for var in vault.variables:
             print(var)
+
+@defer.inlineCallbacks
+def send_vault_async(vault_name):
+    vault = VAULT_MANAGER.load_vault(vault_name)
+    if not vault:
+        print(f"Vault {vault_name} does not exist.")
+        return
+
+    w = yield create("magicenv.dev", MAILBOX_RELAY, reactor)
+    yield w.allocate_code()
+
+    code = yield w.get_code()
+    print(f"code: {code}")
+
+    data = {
+        "vault": vault_name,
+        "variables": vault.variables
+    }
+
+    yield w.send_message(json.dumps(data).encode('utf-8'))
+
+    # Wait for an acknowledgement from the receiver
+    ack = yield w.get_message()
+    print(f"Acknowledgement received: {ack}")
+
+    yield w.close()
+    reactor.stop()
+
+@defer.inlineCallbacks
+def receive_vault_async():
+    w = yield create("magicenv.dev", MAILBOX_RELAY, reactor)
+
+    # Set the code for the wormhole
+    print("Enter the code: ")
+    code = input()
+    yield w.set_code(code)
+
+    # Receive the message
+    message = yield w.get_message()
+    data = json.loads(message.decode('utf-8'))
+    print(f"Received data: {data}")
+
+    # Save the received vault
+    vault_name = data['vault']
+    variables = data['variables']
+    create_vault(vault_name)
+
+    for variable in variables:
+        add_variable(vault_name, variable)
+
+    # Send an acknowledgement back to the sender
+    yield w.send_message(b"Received")
+
+    # Close the wormhole
+    yield w.close()
+    reactor.stop()
+
+def send_vault(vault_name):
+    reactor.callWhenRunning(send_vault_async, vault_name)
+    reactor.run()
+
+def receive_vault():
+    reactor.callWhenRunning(receive_vault_async)
+    reactor.run()
