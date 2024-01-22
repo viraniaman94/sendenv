@@ -36,6 +36,8 @@ VS Code Extension Interaction with CLI: We discussed how a VS Code extension mig
 - In the future, allow people to host their own relay and rendezvous servers.
 - Add autocomplete to all commands
 - Autocomplete should be dynamic - don't show existing items in the dropdown list
+- What happens when receiver enters wrong code?
+- What happens to export values when they are overwritten?
 
 ## Happy path flow
 

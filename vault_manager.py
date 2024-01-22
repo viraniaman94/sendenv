@@ -7,11 +7,14 @@ class VaultManager:
     def __init__(self):
         self.vaults = self.load_vaults()
 
-    def load_vault(self, name):
+    def load_vault(self, name, throw_error=True):
         if name in self.vaults:
             return self.vaults[name]
         else:
-            raise ValueError(f"Vault '{name}' does not exist.")
+            if throw_error:
+                raise ValueError(f"Vault '{name}' does not exist.")
+            else:
+                return None
 
     def load_vaults(self):
         if os.path.exists(VAULTS_STORAGE):

@@ -1,6 +1,7 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 import os
+from config import WORMHOLE_APP_ID
 from vault_manager import VaultManager
 from twisted.internet import reactor, defer
 from wormhole import create
@@ -114,15 +115,27 @@ def send_vault_async(vault_name):
         print(f"Vault {vault_name} does not exist.")
         return
 
-    w = yield create("magicenv.dev", MAILBOX_RELAY, reactor)
+    w = yield create(WORMHOLE_APP_ID, MAILBOX_RELAY, reactor)
     yield w.allocate_code()
 
     code = yield w.get_code()
     print(f"code: {code}")
 
+    # Read the variable values from the system environment
+    variables = {}
+    for var in vault.variables:
+        value = os.environ.get(var)
+        if value is None:
+            choice = input(f"Variable '{var}' is not present in the environment. Do you want to input a new value? (y/n): ")
+            if choice.lower() == 'y':
+                value = input(f"Enter the value for variable '{var}': ")
+            else:
+                continue
+        variables[var] = value
+
     data = {
         "vault": vault_name,
-        "variables": vault.variables
+        "variables": variables
     }
 
     yield w.send_message(json.dumps(data).encode('utf-8'))
@@ -136,7 +149,7 @@ def send_vault_async(vault_name):
 
 @defer.inlineCallbacks
 def receive_vault_async():
-    w = yield create("magicenv.dev", MAILBOX_RELAY, reactor)
+    w = yield create(WORMHOLE_APP_ID, MAILBOX_RELAY, reactor)
 
     # Set the code for the wormhole
     print("Enter the code: ")
@@ -151,6 +164,28 @@ def receive_vault_async():
     # Save the received vault
     vault_name = data['vault']
     variables = data['variables']
+
+    # Check if vault with same name exists
+    existing_vault = VAULT_MANAGER.load_vault(vault_name, throw_error=False)
+    if existing_vault:
+        print(f"Vault {vault_name} already exists.")
+        choice = input("Do you want to overwrite it? (yes/no): ")
+        if choice.lower() != 'yes':
+            print("Keeping the existing vault.")
+            return
+
+    # Check if the received variable keys are already present in the system
+    for var, value in variables.items():
+        if var in os.environ:
+            print(f"Variable {var} already exists.")
+            choice = input("Do you want to overwrite it? (yes/no): ")
+            if choice.lower() != 'yes':
+                print("Keeping the existing value.")
+                continue
+
+    # Set the variables in the system environment
+    set_env_var_permanently(variables)
+
     create_vault(vault_name)
 
     for variable in variables:
@@ -170,3 +205,34 @@ def send_vault(vault_name):
 def receive_vault():
     reactor.callWhenRunning(receive_vault_async)
     reactor.run()
+
+def set_env_var_permanently(vars):
+    shell = os.path.basename(os.environ.get('SHELL', ''))
+
+    if shell == 'bash':
+        rc_files = ['~/.bashrc', '~/.bash_profile']
+        export_line_format = "export {var}={value}\n"
+    elif shell == 'zsh':
+        rc_files = ['~/.zshrc']
+        export_line_format = "export {var}={value}\n"
+    elif shell == 'csh' or shell == 'tcsh':
+        rc_files = ['~/.cshrc', '~/.tcshrc']
+        export_line_format = "setenv {var} {value}\n"
+    elif shell == 'fish':
+        rc_files = ['~/.config/fish/config.fish']
+        export_line_format = "set -x {var} {value}\n"
+    else:
+        print(f"Unsupported shell: {shell}")
+        return
+
+    for rc_file in rc_files:
+        rc_file = os.path.expanduser(rc_file)
+        if os.path.exists(rc_file):
+            with open(rc_file, 'a') as f:
+                for var, value in vars.items():
+                    export_line = export_line_format.format(var=var, value=value)
+                    f.write(export_line)
+            print(f"Added variables to {rc_file}. Please logout and login again for the changes to take effect.")
+            break
+    else:
+        print("Could not find a suitable rc file to add the variables")
