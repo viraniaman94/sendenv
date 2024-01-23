@@ -1,8 +1,8 @@
 import argparse
 import json
 import os
-import cli
-from config import VAULTS_CONFIG, VAULTS_STORAGE
+import sendenv.cli as cli
+from sendenv.config import VAULTS_CONFIG, VAULTS_STORAGE
 
 def main():
     parser = argparse.ArgumentParser(description='Manage environment variable vaults.')

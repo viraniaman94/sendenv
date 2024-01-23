@@ -1,8 +1,8 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 import os
-from config import WORMHOLE_APP_ID
-from vault_manager import VaultManager
+from sendenv.config import WORMHOLE_APP_ID
+from sendenv.vault_manager import VaultManager
 from twisted.internet import reactor, defer
 from wormhole import create
 from wormhole.cli.public_relay import MAILBOX_RELAY
@@ -159,7 +159,6 @@ def receive_vault_async():
     # Receive the message
     message = yield w.get_message()
     data = json.loads(message.decode('utf-8'))
-    print(f"Received data: {data}")
 
     # Save the received vault
     vault_name = data['vault']

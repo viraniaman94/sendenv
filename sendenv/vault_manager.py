@@ -1,7 +1,7 @@
 import json
 import os
-from vault import Vault
-from config import VAULTS_STORAGE
+from sendenv.vault import Vault
+from sendenv.config import VAULTS_STORAGE
 
 class VaultManager:
     def __init__(self):
