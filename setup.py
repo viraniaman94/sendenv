@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sendenv',
-    version='0.1.2',
+    version='0.1.3',
     description='A tool for developers to share environment variables with their team over the internet.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -31,7 +31,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'sendenv=main:main',
+            'sendenv=sendenv.main:main',
         ],
     },
 )
