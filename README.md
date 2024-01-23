@@ -1,14 +1,17 @@
 ## What is this?
 
-A CLI tool to share select environment variables with someone else, easily and securely. This is useful, for example, when you have a new person on your team and they need secrets and other configuration present in environment variables to run your company's software locally. 
+A CLI tool to share select environment variables with someone else, easily and securely. 
 
-This tool is built on top of [magic-wormhole](https://github.com/magic-wormhole/magic-wormhole), which allows for secure P2P transfer of data. In case a direct connection cannot be made (due to NAT gateways in the middle, for example), the data goes through an untrusted relay server. For known vulnerabilities of magic-wormhole, click [here](https://magic-wormhole.readthedocs.io/en/latest/attacks.html). 
+This tool is built on top of [magic-wormhole](https://github.com/magic-wormhole/magic-wormhole), which allows for secure, accountless P2P transfer of data. 
 
-When you will choose to send a collection of variables to someone, you will be given a one time code. Share that code with the receiver (through Slack, Teams, orally, whatever). Receiver will enter that code in their shell, and that's it. They will now have all the variables that you have shared with them. 
+When you use `sendenv` to send a collection (called `vault`) of variables to someone, a one time code will be generated and shown to you. Share that code with the receiver (through Slack, Teams, orally, whatever). Receiver will enter that code in their shell and have all the variables loaded into their environment. 
+
+### Example use cases
+
+1. A new member has joined your team and needs to set up a ton of environment variables to run your company's code locally. You can use `sendenv` to set up a vault of all your necessary variables once, and share with as many people, as many times as you need to.
+2. If you run your code on a separate environment in addition to your local environment, and want to get all your environment variables from your local to the separate environment, you can use `sendenv` to replicate environment variable on the separate environment easily. 
 
 ## How do I use this?
-
-Packaging and distribution is still broken. Working on it. Speculative docs below:
 
 Install `sendenv` for both the sender and receiver. 
 
@@ -41,3 +44,7 @@ sendenv receive-vault
 ## This will prompt you for the code you received from the sender. Enter it here. 
 ## Now the variables are loaded into your system (exported in your shell RC file).
 ```
+
+### Other commands
+
+Access all commands and understand their use by typing `sendenv -h` or just `sendenv`. 
