@@ -1,8 +1,8 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 import os
-from config import WORMHOLE_APP_ID, VAULTS_DIR
-from vault_manager import VaultManager
+from sendenv.config import WORMHOLE_APP_ID, VAULTS_DIR
+from sendenv.vault_manager import VaultManager
 from twisted.internet import reactor, defer
 from wormhole import create
 from wormhole.cli.public_relay import MAILBOX_RELAY
