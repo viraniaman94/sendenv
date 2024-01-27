@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 def read_requirements():
-    with open('sendenv/requirements.txt', 'r') as req:
+    with open('requirements.txt', 'r') as req:
         content = req.read()
         requirements = content.split('\n')
 
