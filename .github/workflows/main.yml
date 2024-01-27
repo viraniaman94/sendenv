@@ -34,7 +34,9 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -am "Bump version to $NEW_VERSION"
         git tag "v$NEW_VERSION"
-        git push origin main --tags
+        git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main --tags
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
