@@ -29,9 +29,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
-    - name: Install package dependencies
-      run: |
-        pip install -r sendenv/requirements.txt
     - name: Update version in setup.py
       run: |
         VERSION=${GITHUB_REF#refs/tags/}
