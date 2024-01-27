@@ -1,6 +1,6 @@
 import json
 import os
-from sendenv.config import VAULTS_STORAGE
+from config import VAULTS_STORAGE
 
 class Vault:
     def __init__(self, name):
