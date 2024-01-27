@@ -7,6 +7,7 @@ from twisted.internet import reactor, defer
 from wormhole import create
 from wormhole.cli.public_relay import MAILBOX_RELAY
 import json
+import shlex
 
 
 VAULT_MANAGER = VaultManager()
@@ -229,6 +230,8 @@ def set_env_var_permanently(vars):
         if os.path.exists(rc_file):
             with open(rc_file, 'a') as f:
                 for var, value in vars.items():
+                    var = shlex.quote(var)
+                    value = shlex.quote(value)
                     export_line = export_line_format.format(var=var, value=value)
                     f.write(export_line)
             print(f"Added variables to {rc_file}. Please logout and login again for the changes to take effect.")
