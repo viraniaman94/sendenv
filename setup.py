@@ -7,9 +7,15 @@ def read_requirements():
 
     return requirements
 
+def read_version():
+    with open('VERSION', 'r') as version_file:
+        version = version_file.read().strip()
+
+    return version
+
 setup(
     name='sendenv',
-    version='0.1.7',
+    version=read_version(),
     description='A tool for developers to share environment variables with their team over the internet.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
