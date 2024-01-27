@@ -1,5 +1,12 @@
 from setuptools import setup, find_packages
 
+def read_requirements():
+    with open('sendenv/requirements.txt', 'r') as req:
+        content = req.read()
+        requirements = content.split('\n')
+
+    return requirements
+
 setup(
     name='sendenv',
     version='0.1.7',
@@ -25,10 +32,7 @@ setup(
         'Programming Language :: Python :: 3.11',
     ],
     python_requires='>=3.10',
-    install_requires=[
-        'prompt_toolkit==3.0.43',
-        'magic-wormhole==0.13.0'
-    ],
+    install_requires=read_requirements(),
     entry_points={
         'console_scripts': [
             'sendenv=sendenv.main:main',
