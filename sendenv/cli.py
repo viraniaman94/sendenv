@@ -168,6 +168,10 @@ def receive_vault_async():
     # Set the variables in the system environment
     if not set_env_var_permanently(variables, vault_name):
         print("Aborted. No changes were made.")
+        # Send an acknowledgement back to the sender
+        yield w.send_message(b"Received")
+        # Close the wormhole
+        yield w.close()
         reactor.stop()
         return
     
@@ -178,13 +182,10 @@ def receive_vault_async():
         choice = input("Do you want to overwrite it? (yes/no): ")
         if choice.lower() != 'yes':
             print("Keeping the existing vault.")
-            reactor.stop()
-            return
-
-    create_vault(vault_name)
-
-    for variable in variables:
-        add_variable(vault_name, variable)
+        else:
+            create_vault(vault_name)
+            for variable in variables:
+                add_variable(vault_name, variable)
 
     # Send an acknowledgement back to the sender
     yield w.send_message(b"Received")
@@ -222,41 +223,29 @@ def set_env_var_permanently(vars, vault_name):
 
     for rc_file in rc_files:
         rc_file = os.path.expanduser(rc_file)
-        if os.path.exists(rc_file):
-            user_input = input(f"Do you want to add variables to {rc_file}? (yes/no): ")
-            if user_input.lower() != 'yes':
-                file_name = f'{VAULTS_DIR}/{vault_name}.env'
-                print("You chose not to add variables to your shell file.")
-                user_input = input(f"Do you want to save variables to '{file_name}'? (yes/no): ")
-                if user_input.lower() == 'yes':
-                    # Check if the received variable keys are already present in the system
-                    with open(f'{VAULTS_DIR}/{vault_name}.env', 'w') as f:
-                        for var, value in vars.items():
-                            var = shlex.quote(var)
-                            value = shlex.quote(value)
-                            f.write(f"{var}={value}\n")
-                    print(f"Variables saved to {file_name}")
-                    return True
-                else:
-                    print("Aborted. No changes were made.")
-                return False
-
-            for var, value in vars.items():
-                if var in os.environ:
-                    print(f"Variable {var} already exists.")
-                    choice = input("Do you want to overwrite it? (yes/no): ")
-                    if choice.lower() != 'yes':
-                        print("Keeping the existing value.")
-                        continue
-
+        try:
             with open(rc_file, 'a') as f:
-                for var, value in vars.items():
-                    var = shlex.quote(var)
-                    value = shlex.quote(value)
-                    export_line = export_line_format.format(var=var, value=value)
-                    f.write(export_line)
-            print(f"Added variables to {rc_file}. Please logout and login again for the changes to take effect.")
-            return True
+                pass
+        except PermissionError:
+            print(f"The file {rc_file} is read-only.")
+        else:
+            user_input = input(f"Do you want to add variables to '{rc_file}'? (yes/no): ")
+            if user_input.lower() == 'yes':
+                with open(rc_file, 'a') as f:
+                    for var, value in vars.items():
+                        f.write(export_line_format.format(var=shlex.quote(var), value=shlex.quote(value)))
+                print(f"Variables saved to {rc_file}. Please restart the shell for changes to take effect.")
+                return True
+
+    file_name = f'{VAULTS_DIR}/{vault_name}.env'
+    user_input = input(f"Do you want to save variables to '{file_name}' instead? (yes/no): ")
+    if user_input.lower() == 'yes':
+        with open(file_name, 'w') as f:
+            for var, value in vars.items():
+                var = shlex.quote(var)
+                value = shlex.quote(value)
+                f.write(f"{var}={value}\n")
+        print(f"Variables saved to {file_name}")
+        return True
     else:
-        print("Could not find a suitable rc file to add the variables")
         return False
